@@ -35,6 +35,10 @@ npm run build
 
 ## install
 
+### start
 > Open your VSCode and select the extension menu, Select the vsix file
 
 ![install](images/install.png)
+
+### done
+![installed](images/installed.png)
