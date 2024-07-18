@@ -25,15 +25,13 @@
 
 # Usage
 
-## build
-
-```npm
-npm run build
-```
-
-> Output chrome-extension-api-xxx.vsix in the current directory
 
 ## install
+
+### assets
+
+Download the asstes on GitHub [releases](https://github.com/liujilongObject/vsc-extension-chrome-extension-api/releases)
+
 
 ### start
 > Open your VSCode and select the extension menu, Select the vsix file
@@ -42,3 +40,14 @@ npm run build
 
 ### done
 ![installed](images/installed.png)
+
+
+# build
+
+### You can clone the code and build it locally
+
+```npm
+npm ci && npm run build
+```
+
+> Output chrome-extension-api-xxx.vsix in the current directory
