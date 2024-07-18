@@ -14,7 +14,7 @@
 
 ![hover](images/api_hover.png)
 
-## The list of supported languages includes
+## The list of supported languages
 - javascript
 - typescript
 - html
