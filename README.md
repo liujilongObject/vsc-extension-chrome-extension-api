@@ -18,6 +18,11 @@
 - html
 - vue
 
+# Environment
+
+- vscode >= 1.90.0
+
+
 # Usage
 
 ## build
@@ -30,6 +35,6 @@ npm run build
 
 ## install
 
-> Open your VSCode and select the extension menu
+> Open your VSCode and select the extension menu, Select the vsix file
 
 ![install](images/install.png)
