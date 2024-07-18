@@ -1,3 +1,5 @@
+# Features
+
 ## Supports all Chrome Extension API prompts for v3 version
 
 ### Supports API Auto completion
@@ -15,3 +17,19 @@
 - typescript
 - html
 - vue
+
+# Usage
+
+## build
+
+```npm
+npm run build
+```
+
+> Output chrome-extension-api-xxx.vsix in the current directory
+
+## install
+
+> Open your VSCode and select the extension menu
+
+![install](images/install.png)
