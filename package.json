@@ -20,7 +20,8 @@
     "Other"
   ],
   "keywords": [
-    "Chrome Extension",
+    "VSCode Extension",
+    "Chrome Extension API",
     "API AutoComplete"
   ],
   "activationEvents": [

@@ -2,6 +2,8 @@
 
 ## Supports all Chrome Extension API prompts for v3 version
 
+> [Chrome Extension API](https://developer.chrome.com/docs/extensions/reference/api)
+
 ### Supports API Auto completion
 
 ![prop](images/prop_prompt.png)
