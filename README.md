@@ -30,12 +30,12 @@
 
 ## install
 
-### assets
+### download
 
-Download the asstes on GitHub [releases](https://github.com/liujilongObject/vsc-extension-chrome-extension-api/releases)
+Download the assets on GitHub [releases](https://github.com/liujilongObject/vsc-extension-chrome-extension-api/releases)
 
 
-### start
+### editor
 > Open your VSCode and select the extension menu, Select the vsix file
 
 ![install](images/install.png)
