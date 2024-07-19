@@ -1,9 +1,25 @@
 import * as vscode from 'vscode';
-import { CHROME_API, TKeyName, chromeApiKeys, chromeApiEvents } from './chrome-api';
+import { CHROME_API, TKeyName, TApiType, chromeApiKeys, chromeApiEvents } from './chrome-api';
 
 const LANGUAGES = ['javascript', 'vue', 'typescript', 'html'];
 
 const getCompletionItem = (itemLabel: vscode.CompletionItemLabel, itemKind: vscode.CompletionItemKind) => new vscode.CompletionItem(itemLabel, itemKind);
+
+// hover 具体api名称: 区分 method | event
+const onHoverAtApiName = (lineText: string, position: vscode.Position, propName: TKeyName, apiType: TApiType): vscode.Hover | undefined => {
+  const methodsInProp: string[] = CHROME_API[propName][apiType];
+  const hoverApiName = methodsInProp.find(e => lineText.includes(e)) as string;
+  const apiNameStartIndex = lineText.indexOf(hoverApiName);
+  const apiNameEndIndex = apiNameStartIndex + hoverApiName.length;
+  if (position.character >= apiNameStartIndex && position.character <= apiNameEndIndex) {
+    const mdStrs = [
+      new vscode.MarkdownString(`chrome.${propName}.${hoverApiName}`),
+      new vscode.MarkdownString(`[Chrome Extensions API Reference](https://developer.chrome.com/docs/extensions/reference/api/${propName}#${apiType}-${hoverApiName})`)
+    ];
+    return new vscode.Hover(mdStrs);
+  }
+  return undefined;
+};	
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -93,42 +109,55 @@ export function activate(context: vscode.ExtensionContext) {
 		'.' // triggered whenever a '.' is being typed
 	);
 
-	// hover 触发
-	const apiHoverProvider = vscode.languages.registerHoverProvider(
+	// hover 属性名触发
+	const propHoverProvider = vscode.languages.registerHoverProvider(
 		LANGUAGES,
 		{
 			provideHover(document: vscode.TextDocument, position: vscode.Position) {
 				// 获取当前行文本
 				const lineAtText = document.lineAt(position).text;
-	
-				if (chromeApiKeys.every(e => !lineAtText.includes(`${e}`))) {
-					return undefined;
+
+				// hover api分类名称
+				const hoverPropName: TKeyName = chromeApiKeys.find(e => lineAtText.includes(e)) as TKeyName;
+				const propNameStartIndex = lineAtText.indexOf(hoverPropName);
+				const propNameEndIndex = propNameStartIndex + hoverPropName.length;
+				// 判断 hover 时，光标是否悬停在指定字符的范围内
+				if (position.character >= propNameStartIndex && position.character <= propNameEndIndex) {
+					const mdStrs = [
+						new vscode.MarkdownString(`chrome.${hoverPropName}`),
+						new vscode.MarkdownString(`[Chrome Extensions API Reference](https://developer.chrome.com/docs/extensions/reference/api/${hoverPropName})`)
+					];
+
+					const range = new vscode.Range(new vscode.Position(position.line, propNameStartIndex), new vscode.Position(position.line, propNameEndIndex));
+
+					return new vscode.Hover(mdStrs, range);
 				}
 
-				const hoverPropName: TKeyName = chromeApiKeys.find(e => lineAtText.includes(`${e}`)) as TKeyName;
-
-				// 截取 hover 时命中的属性字符串
-				const startIndex = lineAtText.indexOf(hoverPropName);
-				const endIndex = startIndex + hoverPropName.length;
-				const range = new vscode.Range(new vscode.Position(position.line, startIndex), new vscode.Position(position.line, endIndex));
-				// 获取指定范围内的文本字符串
-				// const rangeText = document.getText(range)
-
-				const mdStrs = [
-					new vscode.MarkdownString(`chrome.${hoverPropName}`),
-					new vscode.MarkdownString(`[Chrome Extensions API Reference](https://developer.chrome.com/docs/extensions/reference/api/${hoverPropName})`)
-				];
-
-				return new vscode.Hover(mdStrs, range);
+				return undefined;
 			}
 		}
 	);
+	// hover api名触发
+	const apiHoverProviders = ['method', 'event'].map(type => {
+		return vscode.languages.registerHoverProvider(
+			LANGUAGES,
+			{
+				provideHover(document: vscode.TextDocument, position: vscode.Position) {
+					// 获取当前行文本
+					const lineAtText = document.lineAt(position).text;
+					const hoverPropName: TKeyName = chromeApiKeys.find(e => lineAtText.includes(e)) as TKeyName;
+					return onHoverAtApiName(lineAtText, position, hoverPropName, type as TApiType);	
+				}
+			}
+		);
+	});
 
 	context.subscriptions.push(
 		chromeCompletionProvider,
 		propCompletionProvider,
 		apiCompletionProvider,
 		addListenerCompletionProvider,
-		apiHoverProvider
+		propHoverProvider,
+		...apiHoverProviders
 	);
 }

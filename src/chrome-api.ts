@@ -908,12 +908,14 @@ export const CHROME_API = {
       "onRemoved"
     ]
   }
-}
+};
 
-export type TKeyName = keyof (typeof CHROME_API)
+export type TKeyName = keyof typeof CHROME_API;
 
-export const chromeApiKeys = Object.keys(CHROME_API)
+export type TApiType = 'method' | 'event';
 
-export const chromeApiEvents = chromeApiKeys.map(k => CHROME_API[k as TKeyName]['event']).flat()
+export const chromeApiKeys = Object.keys(CHROME_API);
 
-// const chromeApiMethods = chromeApiKeys.map(k => CHROME_API[k as TKeyName]['method']).flat()
+export const chromeApiEvents = chromeApiKeys.map(k => CHROME_API[k as TKeyName]['event']).flat();
+
+// export const chromeApiMethods = chromeApiKeys.map(k => CHROME_API[k as TKeyName]['method']).flat();

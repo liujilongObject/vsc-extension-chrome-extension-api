@@ -10,9 +10,11 @@
 
 ![api](images/api_prompt.png)
 
-### Supports hover to display API documentation
+### Supports hover to display API documentation link
 
-![hover](images/api_hover.png)
+![hover](images/prop_name_hover.png)
+
+![hover](images/api_name_hover.png)
 
 ## The list of supported languages
 - javascript
