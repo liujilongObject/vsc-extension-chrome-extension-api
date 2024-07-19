@@ -34,7 +34,7 @@
 
 ### download
 
-Download the assets on GitHub [releases](https://github.com/liujilongObject/vsc-extension-chrome-extension-api/releases)
+Download the assets in [releases](https://github.com/liujilongObject/vsc-extension-chrome-extension-api/releases)
 
 
 ### editor
