@@ -3,7 +3,10 @@ import { CHROME_API, TKeyName, TApiType, chromeApiKeys, chromeApiEvents } from '
 
 const LANGUAGES = ['javascript', 'vue', 'typescript', 'html'];
 
-const getCompletionItem = (itemLabel: vscode.CompletionItemLabel, itemKind: vscode.CompletionItemKind) => new vscode.CompletionItem(itemLabel, itemKind);
+const CHROME = 'chrome';
+const DOT = '.';
+
+const getCompletionItem = (label: vscode.CompletionItemLabel, kind: vscode.CompletionItemKind) => new vscode.CompletionItem(label, kind);
 
 // hover 具体api名称: 区分 method | event
 const onHoverAtApiName = (lineText: string, position: vscode.Position, propName: TKeyName, apiType: TApiType): vscode.Hover | undefined => {
@@ -13,7 +16,7 @@ const onHoverAtApiName = (lineText: string, position: vscode.Position, propName:
   const apiNameEndIndex = apiNameStartIndex + hoverApiName.length;
   if (position.character >= apiNameStartIndex && position.character <= apiNameEndIndex) {
     const mdStrs = [
-      new vscode.MarkdownString(`chrome.${propName}.${hoverApiName}`),
+      new vscode.MarkdownString(`${CHROME}.${propName}.${hoverApiName}`),
       new vscode.MarkdownString(`[Chrome Extensions API Reference](https://developer.chrome.com/docs/extensions/reference/api/${propName}#${apiType}-${hoverApiName})`)
     ];
     return new vscode.Hover(mdStrs);
@@ -29,11 +32,11 @@ export function activate(context: vscode.ExtensionContext) {
 		{
 			provideCompletionItems() {
 				return [
-					getCompletionItem({ label: 'chrome' }, vscode.CompletionItemKind.Variable)
+					getCompletionItem({ label: CHROME }, vscode.CompletionItemKind.Variable)
 				];
 			}
 		},
-		...['.', ...'chrome'] // triggered whenever a '.' is being typed
+		...[DOT, ...CHROME] // triggered whenever a '.' is being typed
 	);
 
 	const propCompletionProvider = vscode.languages.registerCompletionItemProvider(
@@ -42,7 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 
 				const linePrefix = document.lineAt(position).text.slice(0, position.character);
-				if (!linePrefix.endsWith('chrome.')) {
+				if (!linePrefix.endsWith(`${CHROME}.`)) {
 					return undefined;
 				}
 
@@ -58,7 +61,7 @@ export function activate(context: vscode.ExtensionContext) {
 				const mdStr = `[Chrome Extensions API Reference](https://developer.chrome.com/docs/extensions/reference/api/${label})`;
 				const documentation = new vscode.MarkdownString(mdStr);
 
-				const detail = `chrome.${label}`;
+				const detail = `${CHROME}.${label}`;
 
 				return {
 					label: item.label,
@@ -67,7 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
 				};
 			},
 		},
-		'.' // triggered whenever a '.' is being typed
+		DOT // triggered whenever a '.' is being typed
 	);
 
 	const apiCompletionProvider = vscode.languages.registerCompletionItemProvider(
@@ -88,7 +91,7 @@ export function activate(context: vscode.ExtensionContext) {
 				];
 			}
 		},
-		'.' // triggered whenever a '.' is being typed
+		DOT // triggered whenever a '.' is being typed
 	);
 
 	const addListenerCompletionProvider = vscode.languages.registerCompletionItemProvider(
@@ -106,7 +109,7 @@ export function activate(context: vscode.ExtensionContext) {
 				];
 			}
 		},
-		'.' // triggered whenever a '.' is being typed
+		DOT // triggered whenever a '.' is being typed
 	);
 
 	// hover 属性名触发
@@ -124,7 +127,7 @@ export function activate(context: vscode.ExtensionContext) {
 				// 判断 hover 时，光标是否悬停在指定字符的范围内
 				if (position.character >= propNameStartIndex && position.character <= propNameEndIndex) {
 					const mdStrs = [
-						new vscode.MarkdownString(`chrome.${hoverPropName}`),
+						new vscode.MarkdownString(`${CHROME}.${hoverPropName}`),
 						new vscode.MarkdownString(`[Chrome Extensions API Reference](https://developer.chrome.com/docs/extensions/reference/api/${hoverPropName})`)
 					];
 
