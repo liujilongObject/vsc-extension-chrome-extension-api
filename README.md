@@ -55,3 +55,10 @@ npm ci && npm run build
 ```
 
 > Output chrome-extension-api-xxx.vsix in the current directory
+
+
+# Data Source
+
+- The data source is automatically crawled from the [Chrome Extensions API documentation website](https://developer.chrome.com/docs/extensions/reference/api).
+- [See crawl-chrome-extension-api](https://github.com/liujilongObject/crawl-chrome-extension-api)
+
